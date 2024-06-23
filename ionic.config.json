@@ -1,0 +1,8 @@
+{
+  "name": "bingo-online",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "2352084e"
+}
