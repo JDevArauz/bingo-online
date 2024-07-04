@@ -9,6 +9,7 @@
         const roles = require('./roles.router');
         const events = require('./events.router');
         const states = require('./states.router');
+        const Session = require('./SessionRoutes');
 
         function routerAPI(app) {
         const router = express.Router();
@@ -23,6 +24,7 @@
         router.use('/roles', roles);
         router.use('/events', events);
         router.use('/states', states);
+        router.use('/session', Session);
 
 }
 
