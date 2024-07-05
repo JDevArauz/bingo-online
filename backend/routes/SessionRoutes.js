@@ -3,7 +3,7 @@ const Router = require('express').Router();
 
 Router
     .post('/login', SessionController.Login)
-    .put('/logout/:id', SessionController.Logout);
+    .put('/logout', SessionController.Logout);
 
 
 module.exports = Router;

@@ -1,20 +1,29 @@
-const json_wt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
+const { users } = require('../models/users.model');
 
-function authenticateToken(req,res){
-    const autorization = req.headers['authorization'];
-
-    if (!autorization || !autorization.startWith('Bearer')){
-        return res.status(403).send('Token no valido');
-    }
-
-    const token = autorization.split(' ')[1];
-    json_wt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-        if(err){
-            return res.status(401).send('Acceso denegado');
+async function authenticateToken(req, res, next) {
+    try {
+        const authorization = req.headers['authorization'];
+        let token;
+        if (authorization) {
+            token = authorization.split(' ')[1];
+        } else {
+            token = req.cookies.token;
         }
-        req.user = decoded;
-        next();
-    });
+        if(!token){
+            return res.status(401).json({ message: 'No autorizado' });
+        }
+        const data = jwt.verify(token, process.env.JWT_SECRET,(err,decode)=>{
+            if(err){
+                return res.status(401).json({ message: 'Token invalido' });
+            }
+            req.user_id = decode;
+            next();
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(401).send('No autorizado');
+    }
 }
 
 module.exports = authenticateToken;

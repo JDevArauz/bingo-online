@@ -20,7 +20,6 @@ const Login = async (req, res) => {
         if (!LoginUser) {
             return res.status(401).json({ message: "Usuario o contraseña incorrectos" });
         }
-
         const sesion_active = await users.count({
             where: {
                 dni_id: LoginUser.dni_id,
@@ -35,7 +34,7 @@ const Login = async (req, res) => {
             user_name: LoginUser.name,
             user_email: LoginUser.email
         },
-            "secret_key_test",
+            process.env.JWT_SECRET
         );
         await users.update({
             remember_token: token,
@@ -44,33 +43,40 @@ const Login = async (req, res) => {
                 dni_id: LoginUser.dni_id
             }
         });
-        res.status(200).json({ user_id: LoginUser.dni_id, token: token });
+        res.cookie('token', token, { maxAge: 2147483647000 });
+        res.cookie('user_id', LoginUser.dni_id, { maxAge: 2147483647000 });
+        res.status(200).json({ message: "Sesión iniciada" });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 }
 
-const Logout = async (req,res) => {
-    try{
-        const { id } = req.params;
+const Logout = async (req, res) => {
+    try {
+        const id = req.cookies.user_id;
+        if (!id) {
+            return res.status(401).json({ message: "Se requiere de un usuario" });
+        }
         const user = await users.findOne({
             where: {
                 dni_id: id
             }
         });
-        if (!user){
-            return res.status(404).json({message: "Usuario no encontrado"});
+        if (!user) {
+            return res.status(404).json({ message: "Usuario no encontrado" });
         }
+        res.clearCookie('token');
+        res.clearCookie('user_id');
         await users.update({
             remember_token: null
-        },{
+        }, {
             where: {
                 dni_id: id
             }
         });
-        res.status(200).json({message: "Sesión cerrada"});
-    }catch(error){
-        res.status(500).json({message: error.message});
+        res.status(200).json({ message: "Sesión cerrada" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 }
 
