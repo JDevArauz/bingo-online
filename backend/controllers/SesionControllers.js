@@ -45,7 +45,7 @@ const Login = async (req, res) => {
         });
         res.cookie('token', token, { maxAge: 2147483647000 });
         res.cookie('user_id', LoginUser.dni_id, { maxAge: 2147483647000 });
-        res.status(200).json({ message: "Sesión iniciada" });
+        res.status(200).json({ message: "Sesión iniciada" , rol: LoginUser.role_id});
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
