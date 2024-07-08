@@ -1,0 +1,18 @@
+<ion-content [fullscreen]="true">
+  <div class="login_content">
+    <div class="login_tittle">
+      <img src="../../../assets/icon/favicon.png" alt="">
+      <h1>Bienvenidos</h1>
+      <p>Ingresa tus datos para iniciar sesion</p>
+    </div>
+    <div class="form_container">
+      <form [formGroup]="loginForm" (ngSubmit)="login()"  class="login_form">
+        <input type="text" placeholder="Identificacion o Nombre de Usuario" formControlName="email">
+        <input type="password" placeholder="Contraseña" formControlName="password">
+        <a href="#">Olvidaste tu contraseña?</a>
+        <a href="#">Crear una nueva cuenta</a>
+        <button type="submit" (click)="login()">Iniciar Sesion</button>
+      </form>
+    </div>
+  </div>
+</ion-content>
