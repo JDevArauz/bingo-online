@@ -9,7 +9,7 @@ const bingoNumbers = require('./bingo_numbers.router');
 const roles = require('./roles.router');
 const events = require('./events.router');
 const states = require('./states.router');
-const Session = require('./SessionRoutes');
+const sessions = require('./sessions.router');
 const authenticateToken = require('../Auth/auth_Middleware');
 
 function routerAPI(app) {
@@ -25,7 +25,7 @@ function routerAPI(app) {
         router.use('/roles', authenticateToken, roles);
         router.use('/events', authenticateToken, events);
         router.use('/states', authenticateToken, states);
-        router.use('/session', Session);
+        router.use('/session', sessions);
 
 }
 

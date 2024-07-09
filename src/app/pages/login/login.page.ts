@@ -32,9 +32,12 @@ export class LoginPage implements OnInit {
 
       this.http.post(url, body).subscribe((res: any) => {
         if (res.status === 200) {
-          console.log('Login correcto');;
+          console.log('Login correcto');
+          //RESOLVER LA RESPUESTA, NO SE RECIBE DE MANERA ADECUADA, ES DECIR SE MANEJA ERRONEO
+          console.log(res);
         } else {
           console.log('Login incorrecto');
+          console.log(res);
         }
       }, (error) => {
         console.error('Error en la petición:', error);
