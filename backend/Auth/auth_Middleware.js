@@ -21,8 +21,7 @@ async function authenticateToken(req, res, next) {
             next();
         });
     } catch (err) {
-        console.error(err);
-        res.status(401).send('No autorizado');
+        return res.status(401).send('No autorizado');
     }
 }
 

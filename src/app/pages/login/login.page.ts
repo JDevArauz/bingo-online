@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { NavController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +12,7 @@ import { HttpClient } from '@angular/common/http';
 export class LoginPage implements OnInit {
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private navCtrl: NavController, private router: Router) {
     this.loginForm = this.fb.group({
       email: ['', Validators.required],
       password: ['', Validators.required]
@@ -30,18 +32,20 @@ export class LoginPage implements OnInit {
         pass: contraseña
       };
 
-      this.http.post(url, body).subscribe((res: any) => {
-        if (res.status === 200) {
-          console.log('Login correcto');
-          //RESOLVER LA RESPUESTA, NO SE RECIBE DE MANERA ADECUADA, ES DECIR SE MANEJA ERRONEO
-          console.log(res);
-        } else {
-          console.log('Login incorrecto');
-          console.log(res);
+      this.http.post(url, body, { observe: 'response' }).subscribe(
+        (response: HttpResponse<any>) => {
+          if (response.status === 200) {
+            console.log('Login correcto');
+            console.log('Usuario:', response.body);
+            this.router.navigate(['/Home']);
+          } else {
+            console.log('Login incorrecto');
+          }
+        },
+        (error) => {
+          console.error('Error en la petición:', error);
         }
-      }, (error) => {
-        console.error('Error en la petición:', error);
-      });
+      );
     } else {
       console.log('Formulario no válido');
     }
