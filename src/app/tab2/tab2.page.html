@@ -1,17 +1,43 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 2
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content color="light">
+  <!-- Números llamados -->
+  <div class="rounded-lg shadow-md p-2 bg-gray-400">
+    <h2 class="text-xl font-semibold mb-1 text-purple-800 text-center">Números llamados</h2>
+    <div class="grid grid-cols-8 text-black font-semibold">
+      <ng-container *ngFor="let numero of numerosLlamados">
+        <strong class="py-3 px-2 font-bold bg-red-800 text-yellow-500 text-center p-2 rounded-lg border border-black">
+          {{ numero }}
+        </strong>
+      </ng-container>
+    </div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <!-- Cartón de Bingo -->
+  <div class="flex justify-center items-center py-8">
+    <div class="pr-12 pb-12 rounded-lg bg-yellow-500 w-80">
+      <div class="grid grid-cols-6 text-black bg-transparent font-semibold">
+        <!-- Encabezados B-I-N-G-O -->
+        <div class="font-bold text-center p-3 rounded-lg"></div>
+        <strong class="text-purple-700 text-center p-3 rounded-lg">B</strong>
+        <strong class="text-purple-700 text-center p-3 rounded-lg">I</strong>
+        <strong class="text-purple-700 text-center p-3 rounded-lg">N</strong>
+        <strong class="text-purple-700 text-center p-3 rounded-lg">G</strong>
+        <strong class="text-purple-700 text-center p-3 rounded-lg">O</strong>
 
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+        <!-- Celdas del cartón de Bingo -->
+        <ng-container *ngFor="let row of carton; let i = index">
+          <strong class="text-red-700 text-center py-3 rounded-lg">{{ i + 1 }}</strong>
+          <ng-container *ngFor="let numero of row">
+            <ng-container *ngIf="!(i === 2 && carton[i].indexOf(numero) === 2)">
+              <a class="bg-purple-200 border rounded-lg border-black text-center py-3 hover:bg-red-800 hover:text-yellow-400">{{ numero }}</a>
+            </ng-container>
+            <ng-container *ngIf="i === 2 && carton[i].indexOf(numero) === 2">
+              <a class="bg-gray-800 border rounded-lg border-black text-center text-white py-3">X</a>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+    <a href="" class="flex justify-center text-white font-bold bg-purple-500 px-4 py-2 rounded-md hover:bg-purple-600">CANTAR BINGO!!!</a>
+</div>
+
 </ion-content>
