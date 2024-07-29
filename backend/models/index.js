@@ -9,6 +9,7 @@ const { roles, rolesSchema } = require('./roles.model');
 const { states, statesSchema } = require('./states.model');
 const { users, usersSchema } = require('./users.model');
 const { winners_per_event, winners_per_eventSchema } = require('./winners_per_event.model');
+const { rooms, roomsSchema } = require('./rooms.model');
 
 function setupModels(sequelize) {
     bingo_numbers.init(bingo_numbersSchema, bingo_numbers.config(sequelize));
@@ -22,6 +23,7 @@ function setupModels(sequelize) {
     states.init(statesSchema, states.config(sequelize));
     users.init(usersSchema, users.config(sequelize));
     winners_per_event.init(winners_per_eventSchema, winners_per_event.config(sequelize));
+    rooms.init(roomsSchema, rooms.config(sequelize));
 
 	//DEFINE YOUR ASSOCIATIONS HERE
 }

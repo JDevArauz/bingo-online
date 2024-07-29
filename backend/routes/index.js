@@ -10,6 +10,7 @@ const roles = require('./roles.router');
 const events = require('./events.router');
 const states = require('./states.router');
 const sessions = require('./sessions.router');
+const rooms = require('./rooms.router');
 const authenticateToken = require('../Auth/auth_Middleware');
 
 function routerAPI(app) {
@@ -26,6 +27,8 @@ function routerAPI(app) {
         router.use('/events', authenticateToken, events);
         router.use('/states', authenticateToken, states);
         router.use('/session', sessions);
+        router.use('/rooms', authenticateToken, rooms);
+
 
 }
 
