@@ -1,0 +1,64 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Eventos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" color="dark">
+  <ng-container *ngIf="!userIsAuthenticated; else authContent">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-4">
+      <div *ngFor="let event of events" class="relative border border-purple-600 rounded-lg shadow-md">
+        <div class="relative p-6 py-1.5">
+          <div class="flex items-center justify-between font-bold text-xs">
+            <h2 [ngClass]="getStateClass(event.stateId)" class="relative z-10 rounded-full px-3 py-1.5 font-bold">
+              {{ event.stateName }}
+            </h2>
+          </div>
+          <div class="p-5">
+            <h4 class="text-lg font-semibold text-purple-700"><strong>{{ event.description }}</strong></h4>
+          </div>
+
+          <div>
+            <ion-icon name="location-outline" class="text-purple-700"></ion-icon>
+            <strong class="font-bold text-gray-500">Lugar: </strong>{{ event.location }}
+          </div>
+          <div>
+            <ion-icon name="people-outline" class="text-purple-700"></ion-icon>
+            <strong class="font-bold text-gray-500">Asistencia:</strong> {{ event.eventType }}
+          </div>
+          <div class="flex items-center justify-between text-xs py-5">
+            <div class="text-justify">
+              <h4 class="mr-2">
+                <ion-icon name="calendar-outline" class="text-purple-700"></ion-icon>
+                <strong class="font-bold text-gray-500">Fecha de inicio:</strong>
+              </h4>
+              <h1 class="rounded-full text-center bg-gray-200 px-8 py-1.5 font-medium text-gray-600 hover:bg-red-300">
+                {{ event.startDate }}
+              </h1>
+            </div>
+            <div class="text-justify">
+              <h4 class="mr-2">
+                <ion-icon name="time-outline" class="text-purple-700"></ion-icon>
+                <strong class="font-bold text-gray-500">Hora de Inicio:</strong>
+              </h4>
+              <h1 class="rounded-full text-center bg-gray-200 px-3 py-1.5 font-medium text-gray-600 hover:bg-red-300">
+                {{ event.startHour }}
+              </h1>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-transparent px-2 py-2 flex justify-center rounded-lg">
+          <button class="bg-purple-500 px-5 py-2 font-bold rounded-lg text-white" (click)="navigateToEvent(event.id)">Jugar</button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #authContent>
+    <div class="flex items-center justify-center p-4">
+      <h1 class="text-2xl font-bold text-purple-700">¡Inicia sesión para ver los juegos disponibles!</h1>
+    </div>
+  </ng-template>
+</ion-content>

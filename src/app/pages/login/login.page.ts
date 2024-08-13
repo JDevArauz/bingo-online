@@ -22,7 +22,15 @@ export class LoginPage implements OnInit {
   ngOnInit() {
   }
 
-  login() {
+  navigateToForgotPassword() {
+    this.navCtrl.navigateForward('/forgot-password');
+  }
+
+  navigateToRegister() {
+    this.navCtrl.navigateForward('/register');
+  }
+
+  validateLogin() {
     if (this.loginForm.valid) {
       const usuario = this.loginForm.get('email')?.value;
       const contraseña = this.loginForm.get('password')?.value;
@@ -31,13 +39,13 @@ export class LoginPage implements OnInit {
         user: usuario,
         pass: contraseña
       };
-
       this.http.post(url, body, { observe: 'response' }).subscribe(
         (response: HttpResponse<any>) => {
           if (response.status === 200) {
             console.log('Login correcto');
             console.log('Usuario:', response.body);
-            this.router.navigate(['/Home']);
+            // REDIRECCIONAR A LA PÁGINA DE INICIO DE USUARIOS O DE ADMINISTRADORES, DEPENDE DEL ROL
+            this.router.navigate(['/home']);
           } else {
             console.log('Login incorrecto');
           }
