@@ -1,13 +1,50 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>game</ion-title>
+    <ion-title>Bingo</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">game</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="bg-white rounded-lg shadow-md p-6 m-4">
+    <h2 class="text-xl font-semibold mb-1">Números llamados</h2>
+    <div class="grid grid-cols-8 text-black font-semibold">
+      <div *ngFor="let numero of numerosLlamados" class="font-bold bg-blue-300 text-yellow-900 text-center py-2 rounded-lg border border-purple-400">
+        {{ numero }}
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-center items-center py-8">
+    <div class="pr-12 pb-12 rounded-lg bg-yellow-400 w-80">
+      <div class="grid grid-cols-6 text-black bg-transparent font-semibold">
+        <div class="font-bold text-center p-3 rounded-lg"></div>
+        <div class="font-bold text-purple-700 text-center p-3 rounded-lg">B</div>
+        <div class="font-bold text-purple-700 text-center p-3 rounded-lg">I</div>
+        <div class="font-bold text-purple-700 text-center p-3 rounded-lg">N</div>
+        <div class="font-bold text-purple-700 text-center p-3 rounded-lg">G</div>
+        <div class="font-bold text-purple-700 text-center p-3 rounded-lg">O</div>
+
+        <ng-container *ngFor="let i of [0, 1, 2, 3, 4]; let index = index">
+          <div [ngClass]="getColorClass(index)" class="font-bold text-center py-3 rounded-lg">{{ i + 1 }}</div>
+          <ng-container *ngFor="let numero of carton[i]; let numIndex = index" class="text-center justify-between">
+            <a *ngIf="i === 2 && numIndex === 2" class="bg-orange
+            -400 text-center py-3 border border-violet-700" style="user-select: none;">
+              <strong>X</strong>
+            </a>
+            <a *ngIf="!(i === 2 && numIndex === 2)"
+               [ngClass]="{'bg-blue-500 text-white': numerosSeleccionados.includes(numero), 'bg-white': !numerosSeleccionados.includes(numero)}"
+               (click)="selectNumber(numero)"
+               class="cursor-pointer text-center py-3 border border-violet-700"
+               style="user-select: none;">
+              {{ numero }}
+            </a>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white px-2 py-2 flex justify-center rounded-lg">
+    <ion-button color="primary" expand="block">CANTAR BINGO!!!</ion-button>
+  </div>
 </ion-content>
