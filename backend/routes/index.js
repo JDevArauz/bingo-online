@@ -20,7 +20,7 @@ function routerAPI(app) {
         // DEFINE YOUR ROUTERS HERE
         // EXAMPLE: router.use('/users', users);
 
-        router.use('/users', authenticateToken, users);
+        router.use('/users', users);
         router.use('/bingos', authenticateToken, bingos);
         router.use('/bingo_numbers', authenticateToken, bingoNumbers);
         router.use('/roles', authenticateToken, roles);

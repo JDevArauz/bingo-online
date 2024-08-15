@@ -26,6 +26,7 @@
             allowNull: true,
             type: DataTypes.INTEGER,
             field: 'id',
+            autoIncrement: true,
             primaryKey: true,
         },
 

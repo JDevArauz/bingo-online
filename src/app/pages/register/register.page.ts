@@ -36,6 +36,7 @@ export class RegisterPage implements OnInit {
       const password = this.registerForm.get('password')?.value;
       const url = 'http://localhost:3000/api/users';
       const body = {
+        id: dni_id,
         email: email,
         name: name,
         dni_id: dni_id,
@@ -43,10 +44,10 @@ export class RegisterPage implements OnInit {
       };
       this.http.post(url, body, { observe: 'response' }).subscribe(
         (response: HttpResponse<any>) => {
-          if (response.status === 201) {
+          if (response.status === 200) {
             console.log('Registro correcto');
             console.log('Usuario:', response.body);
-            this.router.navigate(['/login']); // Volver al Login para la autenticacion del usuario
+            this.router.navigate(['/']); // Volver al Login para la autenticacion del usuario
           } else {
             console.log('Registro incorrecto');
           }
