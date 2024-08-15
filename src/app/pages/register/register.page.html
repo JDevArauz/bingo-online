@@ -1,13 +1,23 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>register</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Registro</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">register</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="w-full h-full">
+    <div class="w-full h-full justify-center">
+      <form action="" class="justify-center align-middle w-full h-full flex flex-col gap-3 register_form" (ngSubmit)="validateRegister()">
+        <input type="text" placeholder="Identificacion" name="dni_id">
+        <input type="text" placeholder="Nombre Completo" name="name">
+        <input type="text" placeholder="Correo Electronico" name="email">
+        <input type="password" placeholder="Contraseña" name="password">
+        <button class="rounded-2xl text-center bg-black text-white w-48 h-12 self-center" type="submit">Registrarse</button>
+      </form>
+    </div>
+  </div>
 </ion-content>

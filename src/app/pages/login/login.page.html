@@ -9,10 +9,10 @@
       <form [formGroup]="loginForm" (ngSubmit)="validateLogin()"  class="login_form">
         <input type="text" placeholder="Identificacion o Nombre de Usuario" formControlName="email">
         <input type="password" placeholder="Contraseña" formControlName="password">
-        <a class="hover:text-red-700" (click)="navigateToForgotPassword()">Olvidaste tu contraseña?</a>
-        <a class="hover:text-red-700" (click)="navigateToRegister()">Crear una nueva cuenta</a>
+        <a class="hover:text-blue-700" (click)="navigateToForgotPassword()">Olvidaste tu contraseña?</a>
+        <a class="hover:text-blue-700" (click)="navigateToRegister()">Crear una nueva cuenta</a>
 
-        <button class="rounded-lg text-black text-center bg-white  hover:bg-blue-400 text-white " type="submit" >Iniciar Sesion</button>
+        <button class="rounded-lg text-center bg-white  hover:bg-blue-400 text-white " type="submit" >Iniciar Sesion</button>
       </form>
     </div>
   </div>
