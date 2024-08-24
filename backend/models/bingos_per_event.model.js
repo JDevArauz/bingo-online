@@ -41,6 +41,6 @@
             field: 'bingo_id'
         },
 
-        };
+        };{timestamps: false};
 
         module.exports = { bingos_per_event, bingos_per_eventSchema };

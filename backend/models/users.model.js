@@ -1,89 +1,74 @@
 
-        const { Model, DataTypes } = require('sequelize');
-        const sequelize = require('../libs/sequelize');
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../libs/sequelize');
 
-        const USERS_TABLE = 'users';
+const USERS_TABLE = 'users';
 
-        class users extends Model {
+class users extends Model {
 
-        static associate(models) {
-            // Define associations here if necessary
-        }
+    static associate(models) {
+        // Define associations here if necessary
+    }
 
-        static config(sequelize) {
-            return {
+    static config(sequelize) {
+        return {
             sequelize,
             tableName: USERS_TABLE,
             modelName: 'users',
             timestamps: false
-            }
         }
+    }
+}
+
+const usersSchema = {
+    name: {
+        allowNull: true,
+        type: DataTypes.STRING,
+        field: 'name'
+    },
+
+    email: {
+        allowNull: true,
+        type: DataTypes.STRING,
+        field: 'email'
+    },
+
+    role_id: {
+        allowNull: true,
+        type: DataTypes.INTEGER,
+        field: 'role_id',
+        references: {
+            model: 'roles',
+            key: 'id'
         }
+    },
 
-        const usersSchema = {
+    dni_id: {
+        allowNull: true,
+        type: DataTypes.STRING,
+        field: 'dni_id',
+        primaryKey: true
+    },
 
-        id: {
-            allowNull: true,
-            type: DataTypes.INTEGER,
-            field: 'id',
-            autoIncrement: true,
-            primaryKey: true,
-        },
+    password: {
+        allowNull: true,
+        type: DataTypes.STRING,
+        field: 'password'
+    },
 
-        name: {
-            allowNull: true,
-            type: DataTypes.STRING,
-            field: 'name'
-        },
+    /* Pendiente de implementar la verificación de email 
+    email_verified_at: {
+        allowNull: true,
+        type: DataTypes.DATE,
+        field: 'email_verified_at'
+    },*/
 
-        email: {
-            allowNull: true,
-            type: DataTypes.STRING,
-            field: 'email'
-        },
+    remember_token: {
+        allowNull: true,
+        type: DataTypes.STRING,
+        field: 'remember_token'
+    },
+};
+{ timestamps: false }
 
-        role_id: {
-            allowNull: true,
-            type: DataTypes.INTEGER,
-            field: 'role_id'
-        },
-
-        dni_id: {
-            allowNull: true,
-            type: DataTypes.STRING,
-            field: 'dni_id'
-        },
-
-        password: {
-            allowNull: true,
-            type: DataTypes.STRING,
-            field: 'password'
-        },
-
-        email_verified_at: {
-            allowNull: true,
-            type: DataTypes.DATE,
-            field: 'email_verified_at'
-        },
-
-        created_at: {
-            allowNull: true,
-            type: DataTypes.DATE,
-            field: 'created_at'
-        },
-
-        updated_at: {
-            allowNull: true,
-            type: DataTypes.DATE,
-            field: 'updated_at'
-        },
-
-        remember_token: {
-            allowNull: true,
-            type: DataTypes.STRING,
-            field: 'remember_token'
-        },
-
-        };
-
-        module.exports = { users, usersSchema };
+module.exports = { users, usersSchema };

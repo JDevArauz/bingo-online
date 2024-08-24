@@ -38,9 +38,13 @@
         user_id: {
             allowNull: true,
             type: DataTypes.INTEGER,
-            field: 'user_id'
+            field: 'user_id',
+            references: {
+                model: 'users', // Assuming you have a users table
+                key: 'dni_id'
+            }
         },
 
-        };
+        };{timestamps: false};
 
         module.exports = { events_per_user, events_per_userSchema };

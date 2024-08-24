@@ -32,7 +32,7 @@ const roomsSchema = {
     field: 'user_id',
     references: {
       model: 'users', // Assuming you have a users table
-      key: 'id'
+      key: 'dni_id'
     }
   },
   sessionId: {
@@ -45,19 +45,7 @@ const roomsSchema = {
     type: DataTypes.STRING,
     field: 'status',
     defaultValue: 'waiting'
-  },
-  createdAt: {
-    allowNull: false,
-    type: DataTypes.DATE,
-    field: 'created_at',
-    defaultValue: DataTypes.NOW
-  },
-  updatedAt: {
-    allowNull: false,
-    type: DataTypes.DATE,
-    field: 'updated_at',
-    defaultValue: DataTypes.NOW
   }
-};
+}; { timestamps: false };
 
 module.exports = { rooms, roomsSchema };

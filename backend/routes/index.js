@@ -11,6 +11,7 @@ const events = require('./events.router');
 const states = require('./states.router');
 const sessions = require('./sessions.router');
 const rooms = require('./rooms.router');
+const register = require('./register.router');
 const authenticateToken = require('../Auth/auth_Middleware');
 
 function routerAPI(app) {
@@ -20,16 +21,15 @@ function routerAPI(app) {
         // DEFINE YOUR ROUTERS HERE
         // EXAMPLE: router.use('/users', users);
 
-        router.use('/users', users);
+        router.use('/users',authenticateToken, users);
         router.use('/bingos', authenticateToken, bingos);
         router.use('/bingo_numbers', authenticateToken, bingoNumbers);
         router.use('/roles', authenticateToken, roles);
         router.use('/events', authenticateToken, events);
         router.use('/states', authenticateToken, states);
         router.use('/session', sessions);
+        router.use('/register', register);
         router.use('/rooms', authenticateToken, rooms);
-
-
 }
 
 module.exports = routerAPI;

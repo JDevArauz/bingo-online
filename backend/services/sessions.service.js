@@ -16,6 +16,18 @@ class sessionService {
         return res;
     }
 
+    async findUserById(id) {
+        const res = await models.users.findOne({
+            where: {
+                [Op.or]: {
+                    email: id,
+                    dni_id: id
+                }
+            }
+        });
+        return res;
+    }
+
     async activateSession(userLogged, token) {
         const res = await models.users.update({
             remember_token: token,

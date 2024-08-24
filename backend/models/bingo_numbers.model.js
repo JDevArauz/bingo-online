@@ -41,6 +41,6 @@
             field: 'number'
         },
 
-        };
+        };{timestamps: false};
 
         module.exports = { bingo_numbers, bingo_numbersSchema };

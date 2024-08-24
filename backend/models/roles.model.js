@@ -35,6 +35,6 @@
             field: 'description'
         },
 
-        };
+        };{timestamps: false};
 
         module.exports = { roles, rolesSchema };

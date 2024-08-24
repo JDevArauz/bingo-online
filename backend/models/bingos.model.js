@@ -1,52 +1,53 @@
 
-        const { Model, DataTypes } = require('sequelize');
-        const sequelize = require('../libs/sequelize');
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../libs/sequelize');
+const { timestamp } = require('rxjs');
 
-        const BINGOS_TABLE = 'bingos';
+const BINGOS_TABLE = 'bingos';
 
-        class bingos extends Model {
+class bingos extends Model {
 
-        static associate(models) {
-            // Define associations here if necessary
-        }
+    static associate(models) {
+        // Define associations here if necessary
+    }
 
-        static config(sequelize) {
-            return {
+    static config(sequelize) {
+        return {
             sequelize,
             tableName: BINGOS_TABLE,
             modelName: 'bingos',
             timestamps: false
-            }
         }
-        }
+    }
+}
 
-        const bingosSchema = {
+const bingosSchema = {
 
-        id: {
-            allowNull: true,
-            type: DataTypes.INTEGER,
-            field: 'id',
-            primaryKey: true,
-        },
+    id: {
+        allowNull: true,
+        type: DataTypes.INTEGER,
+        field: 'id',
+        primaryKey: true,
+    },
 
-        user_id: {
-            allowNull: true,
-            type: DataTypes.INTEGER,
-            field: 'user_id'
-        },
+    user_id: {
+        allowNull: true,
+        type: DataTypes.INTEGER,
+        field: 'user_id'
+    },
 
-        card_numbers: {
-            allowNull: true,
-            type: DataTypes.JSON,
-            field: 'card_numbers'
-        },
+    card_numbers: {
+        allowNull: true,
+        type: DataTypes.JSON,
+        field: 'card_numbers'
+    },
 
-        is_winner: {
-            allowNull: true,
-            type: DataTypes.INTEGER,
-            field: 'is_winner'
-        },
+    is_winner: {
+        allowNull: true,
+        type: DataTypes.INTEGER,
+        field: 'is_winner'
+    },
 
-        };
+}; { timestamps: false };
 
-        module.exports = { bingos, bingosSchema };
+module.exports = { bingos, bingosSchema };

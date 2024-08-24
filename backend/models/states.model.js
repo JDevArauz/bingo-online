@@ -35,6 +35,6 @@
             field: 'name'
         },
 
-        };
+        };{timestamps: false};
 
         module.exports = { states, statesSchema };

@@ -37,10 +37,12 @@ const Login = async (req, res) => {
 const Logout = async (req, res) => {
     try {
         const id = req.cookies.user_id;
+        console.log(id);
         if (!id) {
             return res.status(401).json({ message: "Se requiere de un usuario" });
         }
-        const user = await service.findUser({ user: id });
+        const user = await service.findUserById(id);
+        console.log(user);
         if (!user) {
             return res.status(404).json({ message: "Usuario no encontrado" });
         }
