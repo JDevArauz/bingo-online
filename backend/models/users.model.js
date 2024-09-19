@@ -40,7 +40,8 @@ const usersSchema = {
         references: {
             model: 'roles',
             key: 'id'
-        }
+        },
+        defaultValue: 2
     },
 
     dni_id: {

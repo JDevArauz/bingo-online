@@ -36,10 +36,10 @@ const Login = async (req, res) => {
 
 const Logout = async (req, res) => {
     try {
-        const id = req.cookies.user_id;
+        const id = req.cookies.user_id ?? req.body.user;
         console.log(id);
         if (!id) {
-            return res.status(401).json({ message: "Se requiere de un usuario" });
+            return res.status(400).json({ message: "Usuario no autenticado" });
         }
         const user = await service.findUserById(id);
         console.log(user);
