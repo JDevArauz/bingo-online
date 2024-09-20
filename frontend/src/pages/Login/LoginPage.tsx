@@ -1,19 +1,27 @@
-import { personCircleOutline } from "ionicons/icons";
-import { IonButton, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonPage, IonHeader, IonToolbar, IonTitle, IonRow, IonCol, IonAlert, IonText } from "@ionic/react";
-import React from "react";
+import { personCircleOutline, eyeOutline, eyeOffOutline } from "ionicons/icons";
+import { IonButton, IonContent, IonIcon, IonInput, IonItem, IonPage, IonHeader, IonToolbar, IonTitle, IonRow, IonCol, IonToast } from "@ionic/react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 import { useHistory } from "react-router";
 
 const LoginPage: React.FC = () => {
-    const [errorMessage, setErrorMessage] = React.useState("");
-    const [showAlert, setShowAlert] = React.useState(false);
-    const [alertTitle, setAlertTitle] = React.useState("");
-    const [user, setUser] = React.useState("");
-    const [pass, setPass] = React.useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [showToast, setShowToast] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const passwordInputRef = useRef<HTMLIonInputElement>(null);
+    const [user, setUser] = useState("");
+    const [pass, setPass] = useState("");
     const history = useHistory();
 
+    const toggleShowPassword = async () => {
+        setShowPassword(!showPassword);
+        const input = await passwordInputRef.current?.getInputElement();
+        if (input) {
+            input.type = showPassword ? "password" : "text";
+        }
+    };
+
     const handlelogin = async () => {
-        console.log(import.meta.env.VITE_HOST_URL);
         try {
             const res = await axios.post(`${import.meta.env.VITE_HOST_URL}/api/session/login`, {
                 user: user,
@@ -22,19 +30,15 @@ const LoginPage: React.FC = () => {
             if (res.status === 200) {
                 history.push("/tab1");
             } else {
-                setErrorMessage("Login failed: Empty response or no data received from the server.");
-                setAlertTitle("Error");
-                setShowAlert(true);
+                setErrorMessage("Error al iniciar sesión. Por favor, intente de nuevo.");
+                setShowToast(true);
             }
         } catch (error: any) {
-            const errorMessage = error.response?.data?.message || "An unknown error occurred. Please try again.";
+            const errorMessage = error.response?.data?.message || "Ha ocurrido un error desconocido. Por favor, intente de nuevo.";
             setErrorMessage(errorMessage);
-            setAlertTitle("Error");
-            setShowAlert(true);
+            setShowToast(true);
         }
     };
-
-
 
     return (
         <IonPage>
@@ -52,25 +56,33 @@ const LoginPage: React.FC = () => {
                             color="tertiary"
                             style={{ fontSize: "185px", color: "#0040ff" }} />
                     </IonCol>
-                    <IonAlert
-                        isOpen={showAlert}
-                        onDidDismiss={() => {
-                            setShowAlert(false);
-                            setErrorMessage("");
-                        }}
-                        header={alertTitle}
-                        message={errorMessage}
-                        buttons={['Cerrar']}
-                    />
                 </IonRow>
-
+                <IonToast
+                    isOpen={showToast}
+                    onDidDismiss={() => setShowToast(false)}
+                    message={errorMessage}
+                    duration={3000}
+                    position="bottom"
+                    color="danger"
+                    buttons={[
+                        {
+                            text: 'Cerrar',
+                            role: 'cancel',
+                            handler: () => {
+                                setShowToast(false);
+                            }
+                        }
+                    ]}
+                />
                 <IonRow>
                     <IonCol>
-                        <IonItem>
+                        <IonItem
+                            color='default'
+                        >
                             <IonInput
                                 type="text"
                                 required
-                                style={{ marginTop: "10px", padding: "10px", fontSize: "small" }}
+                                style={{ marginTop: "10px", fontSize: "small" }}
                                 value={user}
                                 onIonChange={(e: any) => setUser(e.detail.value!)}
                                 placeholder="Nombre de usuario o Identificación"
@@ -81,16 +93,25 @@ const LoginPage: React.FC = () => {
                 </IonRow>
                 <IonRow>
                     <IonCol>
-                        <IonItem>
+                        <IonItem
+                            color='default'
+                        >
                             <IonInput
+                                ref={passwordInputRef}
                                 type="password"
                                 required
-                                style={{ marginTop: "10px", padding: "10px", fontSize: "small" }}
+                                style={{ marginTop: "10px", fontSize: "small" }}
                                 value={pass}
                                 onIonChange={(e: any) => setPass(e.detail.value!)}
                                 placeholder="Contraseña"
                                 color="tertiary"
                             ></IonInput>
+                            <IonIcon
+                                icon={showPassword ? eyeOffOutline : eyeOutline}
+                                color="tertiary"
+                                onClick={toggleShowPassword}
+                                style={{ fontSize: "25px", color: "tertiary", marginLeft: "10px", marginTop: "5px" }}
+                            ></IonIcon>
                         </IonItem>
                     </IonCol>
                 </IonRow>
@@ -101,13 +122,13 @@ const LoginPage: React.FC = () => {
                             color="tertiary"
                             onClick={handlelogin}
                             style={{ marginTop: "25px", padding: "10px" }}
-                        >Iniciar Sesion</IonButton>
+                        >Iniciar Sesión</IonButton>
                     </IonCol>
                 </IonRow>
                 <p style={{ fontSize: "medium" }}>
-                    No tienes una cuenta ? <a href="/register"
-                        style={{ color: "#0040ff", textDecoration: "none", fontWeight: "bold", fontSize: "medium", marginLeft: "10px" }}
-                    >Registrate</a>
+                    ¿No tienes una cuenta? <a href="/register"
+                        style={{ color: "#6C48C5", textDecoration: "none", fontWeight: "bold", fontSize: "medium", marginLeft: "10px" }}
+                    >Regístrate</a>
                 </p>
             </IonContent>
         </IonPage>
