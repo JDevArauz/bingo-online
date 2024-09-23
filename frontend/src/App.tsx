@@ -11,9 +11,11 @@ import {
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { AuthProvider } from './Auth/AuthContext';
-import { ellipse, square, triangle } from 'ionicons/icons';
+import { ellipse, gameControllerSharp, homeOutline, homeSharp, personCircleSharp, square, triangle } from 'ionicons/icons';
 import LoginPage from './pages/Login/LoginPage';
 import RegisterPage from './pages/Register/registerPage';
+import HomePage from './pages/HomePage';
+import AdminRegister from './pages/Register/adminRegister';
 import Tab1 from './pages/Tab1';
 import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
@@ -57,44 +59,47 @@ const MainRoutes: React.FC = () => {
 
   return (
     <AuthProvider>
-    <IonTabs>
-      <IonRouterOutlet>
-        <Route exact path="/tab1">
-          <Tab1 />
-        </Route>
-        <Route exact path="/tab2">
-          <Tab2 />
-        </Route>
-        <Route path="/tab3">
-          <Tab3 />
-        </Route>
-        <Route path="/login">
-          <LoginPage />
-        </Route>
-        <Route path="/register">
-          <RegisterPage />
-        </Route>
-        <Route exact path="/">
-          <Redirect to="/login" />
-        </Route>
-      </IonRouterOutlet>
+      <IonTabs>
+        <IonRouterOutlet>
+          <Route exact path="/Home">
+            <HomePage />
+          </Route>
+          <Route exact path="/tab2">
+            <Tab2 />
+          </Route>
+          <Route path="/tab3">
+            <Tab3 />
+          </Route>
+          <Route path="/login">
+            <LoginPage />
+          </Route>
+          <Route path="/register">
+            <RegisterPage />
+          </Route>
+          <Route exact path="/">
+            <Redirect to="/Home" />
+          </Route>
+          <Route exact path="/admin_register">
+            <AdminRegister />
+          </Route>
+        </IonRouterOutlet>
 
-      {/* Siempre renderiza el IonTabBar pero ocúltalo con CSS si estamos en login o register */}
+        {/* Siempre renderiza el IonTabBar pero ocúltalo con CSS si estamos en login o register */}
         <IonTabBar slot="bottom" style={{ display: isLoginOrRegister ? 'none' : 'flex' }}>
-          <IonTabButton tab="tab1" href="/tab1">
-            <IonIcon aria-hidden="true" icon={triangle} />
-            <IonLabel>Tab 1</IonLabel>
+          <IonTabButton tab="tab1" href="/Home">
+            <IonIcon aria-hidden="true" icon={homeSharp} />
+            <IonLabel>Inicio</IonLabel>
           </IonTabButton>
           <IonTabButton tab="tab2" href="/tab2">
-            <IonIcon aria-hidden="true" icon={ellipse} />
-            <IonLabel>Tab 2</IonLabel>
+            <IonIcon aria-hidden="true" icon={gameControllerSharp} />
+            <IonLabel>Eventos</IonLabel>
           </IonTabButton>
           <IonTabButton tab="tab3" href="/tab3">
-            <IonIcon aria-hidden="true" icon={square} />
-            <IonLabel>Tab 3</IonLabel>
+            <IonIcon aria-hidden="true" icon={personCircleSharp} />
+            <IonLabel>Mi Perfil</IonLabel>
           </IonTabButton>
         </IonTabBar>
-    </IonTabs>
+      </IonTabs>
     </AuthProvider>
   );
 };
