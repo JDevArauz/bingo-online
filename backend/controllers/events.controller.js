@@ -1,6 +1,8 @@
 
 const eventsService = require('../services/events.service');
+const statesService = require('../services/states.service');
 const service = new eventsService();
+const states = new statesService();
 
 const create = async (req, res) => {
     try {
@@ -13,9 +15,17 @@ const create = async (req, res) => {
 
 const get = async (req, res) => {
     try {
-        const response = await service.find();
+        const response_with_states = await service.find();
+        const states_list = await states.find();
+        const response = response_with_states.map(event => {
+            const state = states_list.find(state => state.id === event.state_id);
+            return {
+                ...event.dataValues,
+                state_id: state.name
+            }
+        });
         res.json(response);
-    } catch (error) {
+    }catch(error) {
         res.status(500).send({ success: false, message: error.message });
     }
 }

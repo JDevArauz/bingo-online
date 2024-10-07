@@ -25,7 +25,7 @@ function routerAPI(app) {
         router.use('/bingos', authenticateToken, bingos);
         router.use('/bingo_numbers', authenticateToken, bingoNumbers);
         router.use('/roles', authenticateToken, roles);
-        router.use('/events', authenticateToken, events);
+        router.use('/events', events);
         router.use('/states', authenticateToken, states);
         router.use('/session', sessions);
         router.use('/register', register);

@@ -29,7 +29,10 @@ const eventsSchema = {
         primaryKey: true,
         autoIncrement: true
     },
-
+    name: {
+        allowNull: true,
+        type: DataTypes.STRING,
+    },
     event_type: {
         allowNull: true,
         type: DataTypes.STRING,
@@ -53,7 +56,7 @@ const eventsSchema = {
         type: DataTypes.INTEGER,
         field: 'state_id',
         references: {
-            model: 'states', // Assuming you have a states table
+            model: 'states',
             key: 'id'
         }
     },
@@ -62,6 +65,10 @@ const eventsSchema = {
         type: DataTypes.DATE,
         field: 'date'
     },
+    hour: {
+        allowNull: true,
+        type: DataTypes.TIME,
+    }
 }; { timestamps: false };
 
 module.exports = { events, eventsSchema };

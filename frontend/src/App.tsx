@@ -14,8 +14,9 @@ import { AuthProvider } from './Auth/AuthContext';
 import { ellipse, gameControllerSharp, homeOutline, homeSharp, personCircleSharp, square, triangle } from 'ionicons/icons';
 import LoginPage from './pages/Login/LoginPage';
 import RegisterPage from './pages/Register/registerPage';
-import HomePage from './pages/HomePage';
 import AdminRegister from './pages/Register/adminRegister';
+import HomePage from './pages/HomePage';
+import EventsPage from './pages/EventsPage';
 import Tab1 from './pages/Tab1';
 import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
@@ -53,7 +54,7 @@ const App: React.FC = () => (
 );
 
 const MainRoutes: React.FC = () => {
-  const location = useLocation(); // Hook para obtener la ubicación actual
+  const location = useLocation();
 
   const isLoginOrRegister = location.pathname === '/login' || location.pathname === '/register';
 
@@ -82,6 +83,9 @@ const MainRoutes: React.FC = () => {
           <Route exact path="/admin_register">
             <AdminRegister />
           </Route>
+          <Route exact path="/events">
+            <EventsPage />
+          </Route>
         </IonRouterOutlet>
 
         {/* Siempre renderiza el IonTabBar pero ocúltalo con CSS si estamos en login o register */}
@@ -90,7 +94,7 @@ const MainRoutes: React.FC = () => {
             <IonIcon aria-hidden="true" icon={homeSharp} />
             <IonLabel>Inicio</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab2" href="/tab2">
+          <IonTabButton tab="tab2" href="/events">
             <IonIcon aria-hidden="true" icon={gameControllerSharp} />
             <IonLabel>Eventos</IonLabel>
           </IonTabButton>

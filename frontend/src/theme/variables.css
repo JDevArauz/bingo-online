@@ -3,3 +3,8 @@
 *{
     font-family: 'Comfortaa', sans-serif;
 }
+
+.small-card {
+    padding: 10px;
+    height: fit-content;
+}

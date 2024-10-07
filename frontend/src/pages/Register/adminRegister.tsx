@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { personAddOutline, eyeOffOutline, eyeOutline, closeCircleSharp } from 'ionicons/icons';
+import { personAddOutline, eyeOffOutline, eyeOutline, closeCircleSharp, personAddSharp } from 'ionicons/icons';
 import { IonButton, IonCol, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonPage, IonRow, IonTitle, IonToast, IonToolbar } from '@ionic/react';
 import { useAuth } from '../../Auth/AuthContext';
 import axios from 'axios';
@@ -15,6 +15,7 @@ const AdminRegister: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
     const passwordInputRef = useRef<HTMLIonInputElement>(null);
     const { isAuthenticated,role } = useAuth();
+    const rol = role || 'SuperAdmin';
 
     const toggleShowPassword = async () => {
         const input = await passwordInputRef.current?.getInputElement();
@@ -52,7 +53,7 @@ const AdminRegister: React.FC = () => {
         }
     };
     
-    if (!isAuthenticated) {
+    if (isAuthenticated) {
         return (
             <IonPage>
                 <IonContent className="ion-text-center" fullscreen>
@@ -64,7 +65,7 @@ const AdminRegister: React.FC = () => {
         )
     }
 
-    if (role !== 'Admin') {
+    if (rol !== 'SuperAdmin') {
         return (
             <IonPage>
                 <IonContent className="ion-text-center" fullscreen>
@@ -87,7 +88,7 @@ const AdminRegister: React.FC = () => {
             <IonContent fullscreen className='ion-text-center'>
                 <IonRow>
                     <IonCol style={{ marginTop: "35px", marginBottom: "15px" }}>
-                        <IonIcon icon={personAddOutline} color="tertiary" style={{ fontSize: "125px", color: "#0040ff" }} />
+                        <IonIcon icon={personAddSharp} color="tertiary" style={{ fontSize: "125px", color: "#0040ff" }} />
                     </IonCol>
                 </IonRow>
                 <IonRow>
