@@ -6,8 +6,8 @@ import { useAuth } from "../Auth/AuthContext";
 const HomePage: React.FC = () => {
     const { isAuthenticated, role } = useAuth();
     const history = useHistory();
-    const userRole = role || 'Admin';
-    const user = isAuthenticated ? 'Usuario' : 'Modo Desarollador';
+    const userRole = role === 'user' ? 'Usuario' : 'Admin';
+    const user = isAuthenticated ? 'Usuario' : 'Modo de Desarrollo';
     return (
         <IonPage>
             <IonHeader>
@@ -47,7 +47,7 @@ const HomePage: React.FC = () => {
                         </IonItem>
 
                     </>
-                ) : ( /* Espacio para la pagina de Usuarios */
+                ) : ( 
                     <IonText>
                         <h1>¡Hola {user}!</h1>
                         <p>¡Bienvenido a la página de {user}!</p>
