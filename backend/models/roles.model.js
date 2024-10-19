@@ -29,10 +29,10 @@
             primaryKey: true,
         },
 
-        description: {
+        name: {
             allowNull: true,
             type: DataTypes.STRING,
-            field: 'description'
+            field: 'name'
         },
 
         };{timestamps: false};

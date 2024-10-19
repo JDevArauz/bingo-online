@@ -5,7 +5,6 @@ import { useAuth } from "../Auth/AuthContext";
 import EventsCards from "../components/EventsCards";
 import CreateEventModal from "../components/EventsRegister";
 
-
 const EventsPage: React.FC = () => {
     const [events, setEvents] = React.useState<any[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
@@ -14,7 +13,7 @@ const EventsPage: React.FC = () => {
     const { isAuthenticated, role } = useAuth();
     const user_type = role === 'user' ? 'user' : 'admin';
 
-    React.useEffect(() => {
+    const fetchEvents = () => {
         setLoading(true);
         axios.get(`${import.meta.env.VITE_HOST_URL}/api/events`)
             .then(response => {
@@ -26,60 +25,16 @@ const EventsPage: React.FC = () => {
             .finally(() => {
                 setLoading(false);
             });
+    };
+
+    React.useEffect(() => {
+        fetchEvents();
     }, []);
 
-    const eventTest = [
-        {
-            id: '1',
-            name: 'Evento 1',
-            description: 'Descripción del evento 1',
-            date: '2022-01-01',
-            hour: '10:00',
-            location: 'Lugar 1',
-            event_type: 'Presencial',
-            state_id: 'Activo'
-        },
-        {
-            id: '2',
-            name: 'Evento 2',
-            description: 'Descripción del evento 2',
-            date: '2022-02-02',
-            hour: '11:00',
-            location: 'Lugar 2',
-            event_type: 'Virtual',
-            state_id: 'Finalizado'
-        },
-        {
-            id: '3',
-            name: 'Evento 3',
-            description: 'Descripción del evento 3',
-            date: '2022-03-03',
-            hour: '12:00',
-            location: 'Lugar 3',
-            event_type: 'Presencial',
-            state_id: 'Activo'
-        },
-        {
-            id: '4',
-            name: 'Evento 4',
-            description: 'Descripción del evento 4',
-            date: '2022-04-04',
-            hour: '13:00',
-            location: 'Lugar 4',
-            event_type: 'Virtual',
-            state_id: 'Activo'
-        },
-        {
-            id: '5',
-            name: 'Evento 5',
-            description: 'Descripción del evento 5',
-            date: '2022-05-05',
-            hour: '14:00',
-            location: 'Lugar 5',
-            event_type: 'Presencial',
-            state_id: 'Finalizado'
-        }
-    ];
+    const handleEventCreated = () => {
+        setShowModal(false);
+        fetchEvents();
+    };
 
     return (
         <IonPage>
@@ -96,9 +51,13 @@ const EventsPage: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent>
-                <EventsCards events={eventTest} userType={user_type} />
-                {/* Añadido el onClose correctamente */}
-                <CreateEventModal modalOpen={showModal} onClose={() => setShowModal(false)} />
+                {events.length === 0 ? (
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%',width:'100%' }}>
+                        <h5>No hay eventos disponibles</h5>
+                    </div>
+                ) : <EventsCards events={events} userType={user_type} />}
+                {/* Pasa el callback handleEventCreated al modal */}
+                <CreateEventModal modalOpen={showModal} onClose={() => setShowModal(false)} onEventCreated={handleEventCreated} />
             </IonContent>
         </IonPage>
     );

@@ -13,6 +13,7 @@ import {
     IonFooter,
 } from "@ionic/react";
 import { informationCircleOutline } from "ionicons/icons";
+import axios from "axios";
 
 interface Events {
     id: string;
@@ -40,6 +41,36 @@ const EventCard: React.FC<EventCardProps> = ({ events, userType }) => {
     const closeModal = () => {
         setShowModal(null);
     };
+
+    const handleCancelEvent = (
+        eventID: string,
+        name: string,
+        description: string,
+        date: string,
+        hour: string,
+        location: string,
+        event_type: string,
+        state_id: string
+    ) => {
+        axios.put(`${import.meta.env.VITE_HOST_URL}/api/events/${eventID}`, {
+            id: eventID,
+            name,
+            description,
+            date,
+            hour,
+            location,
+            event_type,
+            state_id,  // Se pasa el nuevo state_id (4 para cancelado)
+        })
+            .then((response) => {
+                console.log("Evento cancelado:", response.data);
+                closeModal();
+            })
+            .catch((error) => {
+                console.error("Error al cancelar el evento:", error);
+            });
+    };
+
 
     return (
         <>
@@ -139,7 +170,17 @@ const EventCard: React.FC<EventCardProps> = ({ events, userType }) => {
                             <IonToolbar>
                                 {event.state_id.toLowerCase() === "activo" ? (
                                     userType === "admin" ? (
-                                        <IonButton shape="round" color="danger" expand="full">
+                                        <IonButton shape="round" color="danger" expand="full"
+                                            onClick={() => handleCancelEvent(
+                                                event.id,
+                                                event.name,
+                                                event.description,
+                                                event.date,
+                                                event.hour,
+                                                event.location,
+                                                event.event_type,
+                                                '4' 
+                                            )}>
                                             Cancelar Evento
                                         </IonButton>
                                     ) : (

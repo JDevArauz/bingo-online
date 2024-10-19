@@ -32,7 +32,6 @@
         name: {
             allowNull: true,
             type: DataTypes.STRING,
-            field: 'name'
         },
 
         };{timestamps: false};
