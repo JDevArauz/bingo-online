@@ -1,3 +1,7 @@
+// Agregar al principio del archivo
+let currentNumbers = []; // Números llamados
+let players = {}; // Almacenar jugadores
+
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
@@ -9,9 +13,15 @@ const socketIo = require('socket.io');
 dotenv.config();
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, {
+  cors: {
+    origin: '*', // Permitir todos los orígenes (ajustar según sea necesario en producción)
+    methods: ['GET', 'POST'], // Métodos permitidos
+    credentials: true, // Permitir cookies
+  },
+});
 const APIRouter = require('./routes');
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 
 // MIDDLEWARES
@@ -33,17 +43,40 @@ app.use(cookiesParser());
 app.get('/api', (req, res) => {
   res.send('API is running!');
 });
-
-APIRouter(app);
-
 // Socket.IO para actualizaciones en tiempo real
 io.on('connection', (socket) => {
   console.log('Nuevo cliente conectado');
 
+  // Manejar evento de un nuevo jugador
+  socket.on('joinGame', (playerName) => {
+    players[socket.id] = playerName;
+    console.log(`${playerName} se unió al juego`);
+
+    // Emitir lista de jugadores a todos los clientes
+    io.emit('playerList', Object.values(players));
+  });
+
+  // Manejar evento para llamar un número
+  socket.on('callNumber', (number) => {
+    currentNumbers.push(number);
+    io.emit('numberCalled', number); // Notificar a todos los jugadores
+  });
+
+  // Manejar desconexión
   socket.on('disconnect', () => {
     console.log('Cliente desconectado');
+    delete players[socket.id]; // Remover jugador
+    io.emit('playerList', Object.values(players)); // Actualizar lista de jugadores
   });
 });
+
+// API para obtener números llamados
+app.get('/api/numbers', (req, res) => {
+  res.json({ calledNumbers: currentNumbers });
+});
+
+APIRouter(app);
+
 
 server.listen(PORT, () => {
   console.log(`SERVER RUNNING ON PORT ${PORT}`);

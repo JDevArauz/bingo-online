@@ -1,37 +1,66 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IonContent, IonHeader, IonItem, IonLabel, IonPage, IonText, IonTitle, IonToolbar } from "@ionic/react";
+import io from 'socket.io-client';
+const socket = io('http://localhost:3001'); // Cambia esto si tu servidor está en otra dirección
+
 
 
 const GamesPage: React.FC = () => {
-    const numerosLlamados = [12, 34, 56, 78, 90, 11, 22, 33]; // Ejemplo de números llamados
-    const [numerosSeleccionados, setNumerosSeleccionados] = useState<number[]>([]);
-    
-    const carton = [
+    const [numerosLlamados, setNumerosLlamados] = useState<number[]>([]);
+    const [carton, setCarton] = useState<(number | string)[][]>([
       [5, 18, 42, 60, 75],
       [10, 20, 35, 55, 65],
-      [3, 24, 0, 52, 68],  // El 0 es el espacio "Libre"
+      [3, 24, 'X', 52, 68], // El 0 es el espacio "Libre"
       [1, 23, 44, 53, 70],
       [7, 19, 39, 57, 72],
-    ];
+    ]);
+    const [numerosSeleccionados, setNumerosSeleccionados] = useState<number[]>([]);
+    const [jugadores, setJugadores] = useState<string[]>([]);
   
-    // Función para manejar la selección de números
-    const selectNumber = (numero: number) => {
-      if (!numerosSeleccionados.includes(numero)) {
-        setNumerosSeleccionados([...numerosSeleccionados, numero]);
-        console.log('Número seleccionado:', numero);
-      } else {
-        console.log('Número ya seleccionado:', numero);
-        // Remover el número de la lista y volver al color normal
-        setNumerosSeleccionados(numerosSeleccionados.filter((num) => num !== numero));
-      }
+    useEffect(() => {
+      // Unirse al juego
+      const playerName = prompt("Introduce tu nombre:") || "Jugador";
+      socket.emit('joinGame', playerName);
+  
+      // Escuchar números llamados
+      socket.on('numberCalled', (number: number) => {
+        setNumerosLlamados((prev) => [...prev, number]);
+      });
+  
+      // Escuchar la lista de jugadores
+      socket.on('playerList', (players: string[]) => {
+        setJugadores(players);
+      });
+  
+      return () => {
+        socket.disconnect();
+      };
+    }, []);
+  
+    const selectNumber = (numero: number | string) => {
+        // Asegúrate de que el número seleccionado sea un número
+        if (typeof numero === 'number' && !numerosSeleccionados.includes(numero)) {
+          setNumerosSeleccionados((prev) => [...prev, numero]);
+          console.log('Número seleccionado:', numero);
+        } else if (typeof numero === 'number') {
+          console.log('Número ya seleccionado:', numero);
+          // Remover el número de la lista
+          setNumerosSeleccionados((prev) => prev.filter((num) => num !== numero));
+        } else {
+          console.log('Espacio libre seleccionado');
+        }
+      };
+    const callNumber = (number: number) => {
+      socket.emit('callNumber', number);
     };
   
+  
     // Función para obtener la clase de color basada en el estado del número
-    const getColorClass = (numero: number) => {
-      if (numerosSeleccionados.includes(numero)) {
+    const getColorClass = (numero: number | string) => {
+      if (typeof numero === 'number' && !numerosSeleccionados.includes(numero)) {
         return 'bg-purple-800 text-white'; // Color para números seleccionados
       }
-      if (numerosLlamados.includes(numero)) {
+      if (typeof numero === 'number' && !numerosLlamados.includes(numero)) {
         return 'bg-green-600 text-white'; // Color para números llamados
       }
       return 'bg-purple-200 hover:bg-purple-800 hover:text-white'; // Color por defecto
