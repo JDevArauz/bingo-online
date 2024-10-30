@@ -17,6 +17,7 @@ import RegisterPage from './pages/Register/registerPage';
 import AdminRegister from './pages/Register/adminRegister';
 import HomePage from './pages/HomePage';
 import EventsPage from './pages/EventsPage';
+import GamesPage from './pages/GamesPage';
 import Tab1 from './pages/Tab1';
 import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
@@ -42,6 +43,8 @@ import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import './index.css';
+
 
 setupIonicReact();
 
@@ -85,6 +88,9 @@ const MainRoutes: React.FC = () => {
           </Route>
           <Route exact path="/events">
             <EventsPage />
+          </Route>
+          <Route exact path="/game-home">
+          <GamesPage />
           </Route>
         </IonRouterOutlet>
 
