@@ -65,10 +65,6 @@ const eventsSchema = {
         type: DataTypes.DATE,
         field: 'date'
     },
-    hour: {
-        allowNull: true,
-        type: DataTypes.TIME,
-    }
 }; { timestamps: false };
 
 module.exports = { events, eventsSchema };

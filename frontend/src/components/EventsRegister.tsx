@@ -21,7 +21,6 @@ interface Event {
     name: string;
     description: string;
     date: string;
-    hour: string;
     location: string;
     event_type: string;
     state_id: string;
@@ -39,12 +38,12 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({ modalOpen, onClose,
         name: '',
         description: '',
         date: '',
-        hour: '',
         location: '',
         event_type: 'Presencial',
         state_id: '1'
     });
     const [showToast, setShowToast] = useState(false);
+    const [eventTime, setEventTime] = useState<string>(''); // Nuevo estado para la hora
 
     useEffect(() => {
         setShowModal(modalOpen);
@@ -58,16 +57,30 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({ modalOpen, onClose,
     const handleEventTypeChange = (value: string) => {
         setNewEvent({ ...newEvent, event_type: value });
     };
+    const handleTimeChange = (value: string) => {
+        console.log(value);
+        setEventTime(value);
+    };
 
     const handleSubmit = () => {
-        axios.post(`${import.meta.env.VITE_HOST_URL}/api/events`, newEvent)
+        // Obtener los componentes de la fecha y hora
+        const [year, month, day] = newEvent.date.split("-").map(Number);
+        const [hours, minutes] = eventTime.split(":").map(Number);
+        // Crear un objeto Date en UTC
+        const dateUTC = new Date(Date.UTC(year, month - 1, day, hours, minutes));
+        // Formatear la fecha en formato ISO 8601 con 'Z' al final
+        const combinedDateTime = dateUTC.toISOString();
+        // Realizar la llamada a la API para guardar el evento
+        axios.post(`${import.meta.env.VITE_HOST_URL}/api/events`, {
+            ...newEvent,
+            date: combinedDateTime, // Usar el formato ISO 8601
+        })
             .then(response => {
                 setShowToast(true);
                 setNewEvent({
                     name: '',
                     description: '',
                     date: '',
-                    hour: '',
                     location: '',
                     event_type: 'Presencial',
                     state_id: '1'
@@ -129,9 +142,8 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({ modalOpen, onClose,
                         <IonLabel position="stacked">Hora</IonLabel>
                         <IonInput
                             type="time"
-                            name="hour"
-                            value={newEvent.hour}
-                            onIonChange={handleInputChange}
+                            value={eventTime}
+                            onIonChange={(e: any) => handleTimeChange(e.detail.value)}
                             required
                         />
                     </IonItem>

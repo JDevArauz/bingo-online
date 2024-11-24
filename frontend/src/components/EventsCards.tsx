@@ -12,7 +12,7 @@ import {
     IonContent,
     IonFooter,
 } from "@ionic/react";
-import { informationCircleOutline } from "ionicons/icons";
+import { informationCircleOutline, calendarOutline, timeOutline, locationOutline, closeCircleOutline } from "ionicons/icons";
 import axios from "axios";
 
 interface Events {
@@ -20,7 +20,6 @@ interface Events {
     name: string;
     description: string;
     date: string;
-    hour: string;
     location: string;
     event_type: string;
     state_id: string;
@@ -33,6 +32,7 @@ interface EventCardProps {
 
 const EventCard: React.FC<EventCardProps> = ({ events, userType }) => {
     const [showModal, setShowModal] = useState<string | null>(null);
+    
 
     const openModal = (id: string) => {
         setShowModal(id);
@@ -41,13 +41,34 @@ const EventCard: React.FC<EventCardProps> = ({ events, userType }) => {
     const closeModal = () => {
         setShowModal(null);
     };
+    function formatDate(fecha : string) {
+        // Crear un objeto Date a partir de la fecha en formato ISO 8601
+        const date = new Date(fecha);
+    
+        // Formatear la fecha en formato "9 de enero de 2024"
+        const formattedDate = new Intl.DateTimeFormat('es-CR', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            timeZone: 'UTC', // Especificar la zona horaria UTC
+        }).format(date);
+
+        // Formatear la hora en formato de 12 horas con AM/PM
+        const formattedTime = new Intl.DateTimeFormat('es-CR', {
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true,
+            timeZone: 'UTC', // Especificar la zona horaria UTC
+        }).format(date);
+
+        return { formattedDate, formattedTime };
+    }
 
     const handleCancelEvent = (
         eventID: string,
         name: string,
         description: string,
         date: string,
-        hour: string,
         location: string,
         event_type: string,
         state_id: string
@@ -57,7 +78,6 @@ const EventCard: React.FC<EventCardProps> = ({ events, userType }) => {
             name,
             description,
             date,
-            hour,
             location,
             event_type,
             state_id,  // Se pasa el nuevo state_id (4 para cancelado)
@@ -74,146 +94,142 @@ const EventCard: React.FC<EventCardProps> = ({ events, userType }) => {
 
     return (
         <>
-            {events.map((event) => (
-                <IonCard key={event.id} className="small-card">
-                    <IonCardHeader
-                        style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            width: "100%",
-                        }}
-                    >
-                        <div
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                            }}
-                        >
-                            <h5 style={{ margin: 0 }}>{event.name}</h5>
-                            <IonButton
-                                fill="clear"
-                                color="tertiary"
-                                onClick={() => openModal(event.id)}
-                                slot="end"
-                                style={{ marginleft: "35px" }}
-                            >
-                                <IonIcon icon={informationCircleOutline}></IonIcon>
-                            </IonButton>
-                        </div>
-                    </IonCardHeader>
-                    <IonCardContent>
-                        <p>Fecha: {event.date}</p>
-                        <p>Hora: {event.hour}</p>
-                        <p>
-                            Lugar: {event.location} - {event.event_type}
-                        </p>
-                    </IonCardContent>
+      {events.map((event) => (
+        <IonCard key={event.id} className="bg-morado text-blanco shadow-lg rounded-lg mb-4">
+          <IonCardHeader className="flex justify-between items-center">
+  <div className="w-full flex justify-end">
+    <h5 className="w-full flex justify-center text-xl font-semibold text-white">
+      {event.name}
+    </h5>
+    <IonButton
+      size="small"
+      shape="round"
+      className="text-white py-2 px-2"
+      onClick={() => openModal(event.id)}
+    >
+      <IonIcon icon={informationCircleOutline} />
+      <p className="text-sm font-semibold text-white capitalize">Detalles</p>
+    </IonButton>
+  </div>
+</IonCardHeader>
+          <IonCardContent>
+            {(() => {
+              const { formattedDate, formattedTime } = formatDate(event.date);
+              return (
+                <>
+                    <div className="flex items-center">
+                    <IonIcon icon={calendarOutline} className="mr-2" />
+                    <p>Fecha: {formattedDate}</p>
+                    </div>
+                    <div className="flex items-center">
+                    <IonIcon icon={timeOutline} className="mr-2" />
+                    <p>Hora: {formattedTime}</p>
+                    </div>
+                    <div className="flex items-center">
+                    <IonIcon icon={locationOutline} className="mr-2" />
+                    <p>
+                        Lugar: {event.location} - {event.event_type}
+                    </p>
+                    </div>
+                </>
+              );
+            })()}
+          </IonCardContent>
 
-                    {/* Modal for event details */}
-                    <IonModal isOpen={showModal === event.id} onDidDismiss={closeModal}>
-                        <IonHeader>
-                            <IonToolbar>
-                                <IonTitle>Detalles del Evento</IonTitle>
-                                <IonButton
-                                    slot="end"
-                                    onClick={closeModal}
-                                    color="tertiary"
-                                    size="small"
-                                    shape="round"
-                                    style={{ marginRight: "10px" }}
-                                >
-                                    Cerrar
-                                </IonButton>
-                            </IonToolbar>
-                        </IonHeader>
-                        <IonContent className="ion-padding">
-                            <h2>{event.name}</h2>
-                            <div>
-                                <p>
-                                    <strong>Descripción:</strong>
-                                </p>
-                                <p>{event.description}</p>
-                            </div>
-                            <div>
-                                <p>
-                                    <strong>Fecha:</strong>
-                                </p>
-                                <p>{event.date}</p>
-                            </div>
-                            <div>
-                                <p>
-                                    <strong>Hora:</strong>
-                                </p>
-                                <p>{event.hour}</p>
-                            </div>
-                            <div>
-                                <p>
-                                    <strong>Lugar:</strong>
-                                </p>
-                                <p>{event.location}</p>
-                            </div>
-                            <div>
-                                <p>
-                                    <strong>Tipo de Evento:</strong>
-                                </p>
-                                <p>{event.event_type}</p>
-                            </div>
-                            <div>
-                                <p>
-                                    <strong>Estado:</strong>
-                                </p>
-                                <p>{event.state_id}</p>
-                            </div>
-                        </IonContent>
-                        <IonFooter>
-                            <IonToolbar>
-                                {event.state_id.toLowerCase() === "activo" ? (
-                                    userType === "admin" ? (
-                                        <IonButton shape="round" color="danger" expand="full"
-                                            onClick={() => handleCancelEvent(
-                                                event.id,
-                                                event.name,
-                                                event.description,
-                                                event.date,
-                                                event.hour,
-                                                event.location,
-                                                event.event_type,
-                                                '4' 
-                                            )}>
-                                            Cancelar Evento
-                                        </IonButton>
-                                    ) : (
-                                        <IonButton shape="round" color="tertiary" expand="full">
-                                            Inscribirse
-                                        </IonButton>
-                                    )
-                                ) : (
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            width: "100%",
-                                            justifyContent: "center",
-                                        }}
-                                    >
-                                        {userType === "admin" ? (
-                                            <IonButton shape="round" color="tertiary" expand="full">
-                                                Ver Ganadores
-                                            </IonButton>
-                                        ) : (
-                                            <p style={{ color: "red", fontSize: "15px" }}>
-                                                Este evento ha finalizado o fue cancelado
-                                            </p>
-                                        )}
-                                    </div>
-                                )}
-                            </IonToolbar>
-                        </IonFooter>
-                    </IonModal>
-                </IonCard>
-            ))}
-        </>
-    );
+          {/* Modal for event details */}
+          <IonModal isOpen={showModal === event.id} onDidDismiss={closeModal}>
+              <IonToolbar >
+              <div className="bg-purple-600 rounded w-full flex justify-end">
+                <h5 className="w-full flex justify-center text-xl font-semibold mt-3 text-white">
+                {event.name}
+                </h5>
+                <IonButton
+                shape="round"
+                size="small"
+                onClick={closeModal}
+                >
+                <IonIcon icon={closeCircleOutline} />
+                <p className="text-sm font-semibold text-white capitalize">Cerrar</p>
+                </IonButton>
+            </div>
+              </IonToolbar> 
+            <IonCard className="bg-white shadow-md rounded-lg overflow-hidden">            
+                <IonCardContent className="p-4">
+                    <div className="space-y-2">
+                    <div>
+                        <p className="text-sm font-semibold text-gray-700">Descripción:</p>
+                        <p className="text-gray-900">{event.description}</p>
+                    </div>
+                    <div>
+                        <p className="text-sm font-semibold text-gray-700">Fecha:</p>
+                        <p className="text-gray-900">{formatDate(event.date).formattedDate}</p>
+                    </div>
+                    <div>
+                        <p className="text-sm font-semibold text-gray-700">Hora:</p>
+                        <p className="text-gray-900">{formatDate(event.date).formattedTime}</p>
+                    </div>
+                    <div>
+                        <p className="text-sm font-semibold text-gray-700">Lugar:</p>
+                        <p className="text-gray-900">{event.location}</p>
+                    </div>
+                    <div>
+                        <p className="text-sm font-semibold text-gray-700">Tipo de Evento:</p>
+                        <p className="text-gray-900">{event.event_type}</p>
+                    </div>
+                    <div>
+                        <p className="text-sm font-semibold text-gray-700">Estado:</p>
+                        <p className="text-gray-900">{event.state_id}</p>
+                    </div>
+                    </div>
+                </IonCardContent>
+            </IonCard>
+            <IonFooter>
+              <IonToolbar>
+                {event.state_id.toLowerCase() === 'activo' ? (
+                  userType === 'admin' ? (
+                    <IonButton
+                      shape="round"
+                      color="danger"
+                      expand="full"
+                      onClick={() =>
+                        handleCancelEvent(
+                          event.id,
+                          event.name,
+                          event.description,
+                          event.date,
+                          event.location,
+                          event.event_type,
+                          '4'
+                        )
+                      }
+                    >
+                      Cancelar Evento
+                    </IonButton>
+                  ) : (
+                    <IonButton shape="round" color="tertiary" expand="full">
+                      Inscribirse
+                    </IonButton>
+                  )
+                ) : (
+                  <div className="flex justify-center w-full">
+                    {userType === 'admin' ? (
+                      <IonButton shape="round" color="tertiary" expand="full">
+                        Ver Ganadores
+                      </IonButton>
+                    ) : (
+                      <p className="text-red-500 text-sm">
+                        Este evento ha finalizado o fue cancelado
+                      </p>
+                    )}
+                  </div>
+                )}
+              </IonToolbar>
+            </IonFooter>
+          </IonModal>
+        </IonCard>
+      ))}
+    </>
+  );
 };
 
 export default EventCard;
