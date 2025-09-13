@@ -10,17 +10,22 @@ import {
   setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { AuthProvider } from './Auth/AuthContext';
+import { AuthProvider, useAuth } from './Auth/AuthContext';
+import { SocketProvider } from './contexts/SocketContext';
 import { ellipse, gameControllerSharp, homeOutline, homeSharp, personCircleSharp, square, triangle } from 'ionicons/icons';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminBingoPage from './pages/AdminBingoPage';
+import AdminRegister from './pages/Register/adminRegister';
+import UserBingoPage from './pages/UserBingoPage';
+import UserDashboard from './pages/UserDashboard';
+import UsersPage from './pages/UsersPage';
+import ProfilePage from './pages/ProfilePage';
+import WinnersPage from './pages/WinnersPage';
 import LoginPage from './pages/Login/LoginPage';
 import RegisterPage from './pages/Register/registerPage';
-import AdminRegister from './pages/Register/adminRegister';
 import HomePage from './pages/HomePage';
 import EventsPage from './pages/EventsPage';
 import GamesPage from './pages/GamesPage';
-import Tab1 from './pages/Tab1';
-import Tab2 from './pages/Tab2';
-import Tab3 from './pages/Tab3';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -50,67 +55,80 @@ setupIonicReact();
 
 const App: React.FC = () => (
   <IonApp>
-    <IonReactRouter>
-      <MainRoutes /> {/* El componente con las rutas y tabs */}
-    </IonReactRouter>
+    {/* Asegúrate de que ambos proveedores de contexto envuelvan el router. */}
+    <AuthProvider>
+      <SocketProvider>
+        <IonReactRouter>
+          <MainRoutes /> 
+        </IonReactRouter>
+      </SocketProvider>
+    </AuthProvider>
   </IonApp>
 );
 
 const MainRoutes: React.FC = () => {
+  const { isAuthenticated, role } = useAuth();
   const location = useLocation();
 
-  const isLoginOrRegister = location.pathname === '/login' || location.pathname === '/register';
+  const isLoginOrRegister = location.pathname === '/Login' || location.pathname === '/Register';
 
   return (
-    <AuthProvider>
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route exact path="/Home">
-            <HomePage />
-          </Route>
-          <Route exact path="/tab2">
-            <Tab2 />
-          </Route>
-          <Route path="/tab3">
-            <Tab3 />
-          </Route>
-          <Route path="/login">
-            <LoginPage />
-          </Route>
-          <Route path="/register">
-            <RegisterPage />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/Home" />
-          </Route>
-          <Route exact path="/admin_register">
-            <AdminRegister />
-          </Route>
-          <Route exact path="/events">
-            <EventsPage />
-          </Route>
-          <Route exact path="/game-home">
+    <IonTabs>
+      <IonRouterOutlet>
+        <Route exact path="/Home">
+          <HomePage />
+        </Route>
+        <Route path="/Login">
+          <LoginPage />
+        </Route>
+        <Route path="/RegisterPage">
+          <RegisterPage />
+        </Route>
+        <Route exact path="/">
+          <Redirect to="/Home" />
+        </Route>
+        <Route exact path="/RegisterAdmin">
+          {isAuthenticated && (role === 'Administrador') ? <AdminRegister /> : <Redirect to="/Login" />}
+        </Route>
+        <Route exact path="/Events">
+          <EventsPage />
+        </Route>
+        <Route exact path="/GameHome">
           <GamesPage />
-          </Route>
-        </IonRouterOutlet>
+        </Route>
+        <Route exact path="/Bingo/Play">
+          {isAuthenticated && (role === 'Usuario') ? <UserBingoPage /> : <Redirect to="/Login" />}
+        </Route>
+        <Route exact path="/Bingo/Admin">
+          {isAuthenticated && (role === 'Administrador') ? <AdminBingoPage /> : <Redirect to="/Login" />}
+        </Route>
+        <Route exact path="/Users">
+          {isAuthenticated && (role === 'Administrador') ? <UserBingoPage /> : <Redirect to="/Login" />}
+        </Route>
+        <Route exact path="/Winners">
+          {isAuthenticated && (role === 'Administrador') ? <WinnersPage /> : <Redirect to="/Login" />}
+        </Route>
+        <Route exact path="/ProfilePage">
+        <ProfilePage />
+        </Route>
+      </IonRouterOutlet>
+        
 
-        {/* Siempre renderiza el IonTabBar pero ocúltalo con CSS si estamos en login o register */}
-        <IonTabBar slot="bottom" style={{ display: isLoginOrRegister ? 'none' : 'flex' }}>
-          <IonTabButton tab="tab1" href="/Home">
-            <IonIcon aria-hidden="true" icon={homeSharp} />
-            <IonLabel>Inicio</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab2" href="/events">
-            <IonIcon aria-hidden="true" icon={gameControllerSharp} />
-            <IonLabel>Eventos</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab3" href="/tab3">
-            <IonIcon aria-hidden="true" icon={personCircleSharp} />
-            <IonLabel>Mi Perfil</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
-    </AuthProvider>
+      <IonTabBar slot="bottom" style={{ display: isLoginOrRegister ? 'none' : 'flex' }}>
+        <IonTabButton tab="Home" href="/Home">
+          <IonIcon aria-hidden="true" icon={homeSharp} />
+          <IonLabel>Inicio</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="Events" href="/Events">
+          <IonIcon aria-hidden="true" icon={gameControllerSharp} />
+          <IonLabel>Bingos</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="Profile" href="/ProfilePage">
+          <IonIcon aria-hidden="true" icon={personCircleSharp} />
+          <IonLabel>Mi Perfil</IonLabel>
+        </IonTabButton>
+      </IonTabBar>
+    </IonTabs>
   );
 };
 

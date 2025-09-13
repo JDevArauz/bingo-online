@@ -195,7 +195,7 @@ const RegisterPage: React.FC = () => {
                     </IonCol>
                 </IonRow>
                 <p>
-                    Ya tienes una cuenta? <a href="/login" style={{ color: "#6C48C5", textDecoration: "none", fontWeight: "bold", fontSize: "medium", marginLeft: "10px" }}>
+                    Ya tienes una cuenta? <a href="/Login" style={{ color: "#6C48C5", textDecoration: "none", fontWeight: "bold", fontSize: "medium", marginLeft: "10px" }}>
                         Inicia Sesión
                     </a>
                 </p>

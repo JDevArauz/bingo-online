@@ -1,6 +1,6 @@
+const jwt = require('jsonwebtoken');
 const sessionService = require('../services/sessions.service');
 const service = new sessionService();
-const jwt = require('jsonwebtoken');
 
 const Login = async (req, res) => {
     try {
@@ -26,7 +26,14 @@ const Login = async (req, res) => {
             service.activateSession(userLogged, token);
             res.cookie('token', token, { maxAge: 2147483647000 });
             res.cookie('user_id', userLogged.dni_id, { maxAge: 2147483647000 });
-            return res.status(200).json({ message: "Sesión iniciada", rol: userLogged.role_id });
+            
+            return res.status(200).json({
+                message: "Sesión iniciada",
+                token: token,
+                user: userLogged.name,
+                email: userLogged.email,
+                role: userLogged.role_id
+            });
         }
 
     } catch (error) {
@@ -37,17 +44,17 @@ const Login = async (req, res) => {
 const Logout = async (req, res) => {
     try {
         const id = req.cookies.user_id ?? req.body.user;
-        console.log(id);
         if (!id) {
             return res.status(400).json({ message: "Usuario no autenticado" });
         }
         const user = await service.findUserById(id);
-        console.log(user);
         if (!user) {
             return res.status(404).json({ message: "Usuario no encontrado" });
         }
+
         res.clearCookie('token');
         res.clearCookie('user_id');
+
         service.updateSession(id);
         return res.status(200).json({ message: "Sesión cerrada" });
     } catch (error) {

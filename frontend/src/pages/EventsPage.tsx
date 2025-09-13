@@ -1,11 +1,14 @@
 import React from "react";
 import axios from "axios";
-import { IonButton, IonContent, IonHeader, IonModal, IonPage, IonTitle, IonToolbar } from "@ionic/react";
+import { IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from "@ionic/react";
 import { useAuth } from "../Auth/AuthContext";
 import EventsCards from "../components/EventsCards";
 import CreateEventModal from "../components/EventsRegister";
+import EmptyState from "../components/EmptyState"; // Importar
+import { calendarClearOutline } from 'ionicons/icons'; // Icono para el estado vacío
 
 const EventsPage: React.FC = () => {
+    // ... (tus hooks useState, useAuth se mantienen igual)
     const [events, setEvents] = React.useState<any[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string>('');
@@ -13,6 +16,7 @@ const EventsPage: React.FC = () => {
     const { isAuthenticated, role } = useAuth();
     const user_type = role === 'user' ? 'user' : 'admin';
 
+    // ... (tus funciones fetchEvents y handleEventCreated se mantienen igual)
     const fetchEvents = () => {
         setLoading(true);
         axios.get(`${import.meta.env.VITE_HOST_URL}/api/events`)
@@ -40,23 +44,27 @@ const EventsPage: React.FC = () => {
         <IonPage>
             <IonHeader>
                 <IonToolbar>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <IonTitle>Eventos</IonTitle>
-                        {user_type === "admin" ? (
-                            <IonButton onClick={() => setShowModal(true)} color="tertiary" shape="round" size="small" style={{ marginRight: '10px' }}>
+                    <IonTitle>Eventos de Bingo</IonTitle>
+                    {/* Manera correcta de poner botones en la cabecera en Ionic */}
+                    {user_type === "admin" && (
+                        <IonButtons slot="end">
+                            <IonButton onClick={() => setShowModal(true)}>
                                 Crear Evento
                             </IonButton>
-                        ) : null}
-                    </div>
+                        </IonButtons>
+                    )}
                 </IonToolbar>
             </IonHeader>
-            <IonContent>
+            <IonContent className="ion-padding">
+                {/* Usamos el componente EmptyState para un mejor feedback visual */}
                 {events.length === 0 ? (
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%',width:'100%' }}>
-                        <h5>No hay eventos disponibles</h5>
-                    </div>
+                    <EmptyState 
+                        icon={calendarClearOutline}
+                        title="No hay eventos"
+                        message="Parece que no hay eventos programados. ¡Vuelve a intentarlo más tarde!"
+                    />
                 ) : <EventsCards events={events} userType={user_type} />}
-                {/* Pasa el callback handleEventCreated al modal */}
+
                 <CreateEventModal modalOpen={showModal} onClose={() => setShowModal(false)} onEventCreated={handleEventCreated} />
             </IonContent>
         </IonPage>

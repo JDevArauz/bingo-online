@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { IonContent, IonHeader, IonItem, IonLabel, IonPage, IonText, IonTitle, IonToolbar } from "@ionic/react";
 import io from 'socket.io-client';
-const socket = io('http://localhost:3001'); // Cambia esto si tu servidor está en otra dirección
+import { useSocket } from '../contexts/SocketContext';
+const socket = io('http://localhost:3001');
 
 
 
@@ -10,7 +11,7 @@ const GamesPage: React.FC = () => {
     const [carton, setCarton] = useState<(number | string)[][]>([
       [5, 18, 42, 60, 75],
       [10, 20, 35, 55, 65],
-      [3, 24, 'X', 52, 68], // El 0 es el espacio "Libre"
+      [3, 24, 'X', 52, 68],   
       [1, 23, 44, 53, 70],
       [7, 19, 39, 57, 72],
     ]);

@@ -1,8 +1,10 @@
+// src/pages/Login/LoginPage.tsx
 import { personCircleOutline, eyeOutline, eyeOffOutline } from "ionicons/icons";
 import { IonButton, IonContent, IonIcon, IonInput, IonItem, IonPage, IonHeader, IonToolbar, IonTitle, IonRow, IonCol, IonToast } from "@ionic/react";
 import React, { useState, useRef } from "react";
 import axios from "axios";
 import { useHistory } from "react-router";
+import { useAuth } from "../../Auth/AuthContext";
 
 const LoginPage: React.FC = () => {
     const [errorMessage, setErrorMessage] = useState("");
@@ -12,6 +14,7 @@ const LoginPage: React.FC = () => {
     const [user, setUser] = useState("");
     const [pass, setPass] = useState("");
     const history = useHistory();
+    const { login } = useAuth();
 
     const toggleShowPassword = async () => {
         setShowPassword(!showPassword);
@@ -27,8 +30,14 @@ const LoginPage: React.FC = () => {
                 user: user,
                 pass: pass
             });
-            if (res.status === 200) {
-                history.push("/tab1");
+
+            // Asumiendo que tu API responde con { token, user, email, role }
+            if (res.status === 200 && res.data) {
+                const { token, userId, user, email, role } = res.data;
+                if (token && userId && user && email && role) {
+            login(token, userId, user, email, role.toString());
+            history.push("/Home");
+            }
             } else {
                 setErrorMessage("Error al iniciar sesión. Por favor, intente de nuevo.");
                 setShowToast(true);
@@ -126,7 +135,7 @@ const LoginPage: React.FC = () => {
                     </IonCol>
                 </IonRow>
                 <p style={{ fontSize: "medium" }}>
-                    ¿No tienes una cuenta? <a href="/register"
+                    ¿No tienes una cuenta? <a href="/RegisterPage"
                         style={{ color: "#6C48C5", textDecoration: "none", fontWeight: "bold", fontSize: "medium", marginLeft: "10px" }}
                     >Regístrate</a>
                 </p>

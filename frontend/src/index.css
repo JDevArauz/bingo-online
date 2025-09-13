@@ -2,3 +2,132 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* Estilos para el estado vacío (ej. no hay eventos) */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: var(--ion-color-medium);
+}
+
+.empty-state ion-icon {
+    font-size: 80px;
+    margin-bottom: 16px;
+}
+
+.empty-state h5 {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+/* Estilos para los formularios dentro de tarjetas */
+.form-card {
+    max-width: 500px;
+    margin: 20px auto;
+    --background: var(--ion-color-light);
+}
+
+/* --- Estilos para el Juego de Bingo --- */
+
+/* Contenedor principal de los números cantados */
+.drawn-numbers-container {
+    padding: 16px;
+    text-align: center;
+    background: var(--ion-color-light);
+    border-radius: 12px;
+    margin: 16px;
+}
+
+/* Estilo para el último número cantado */
+.current-number {
+    background: var(--ion-color-primary);
+    color: var(--ion-color-primary-contrast);
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 48px;
+    font-weight: bold;
+    margin: 0 auto 16px auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Grid para los números previos */
+.previous-numbers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+    gap: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+}
+
+.previous-number {
+    background: var(--ion-color-medium);
+    color: var(--ion-color-medium-contrast);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+}
+
+
+/* Estilos para el cartón de bingo */
+.bingo-card-grid {
+    padding: 10px;
+    background: linear-gradient(135deg, #6B21A8, #9D50BB); /* Gradiente morado */
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    max-width: 400px; /* Ancho máximo para el cartón */
+    margin: 20px auto;
+}
+
+.bingo-header-cell {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+.bingo-cell {
+    background-color: white;
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 4px;
+    min-height: 50px;
+    cursor: default;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.bingo-cell.free-space {
+    background-color: var(--ion-color-primary);
+    color: white;
+}
+
+.bingo-cell.can-mark {
+    cursor: pointer;
+}
+.bingo-cell.can-mark:hover {
+    transform: scale(1.1);
+}
+
+.bingo-cell.marked {
+    background-color: #2dd4bf; /* Verde menta */
+    color: white;
+    transform: scale(1.1);
+}

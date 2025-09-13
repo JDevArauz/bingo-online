@@ -14,6 +14,7 @@ import {
 } from "@ionic/react";
 import { informationCircleOutline, calendarOutline, timeOutline, locationOutline, closeCircleOutline } from "ionicons/icons";
 import axios from "axios";
+import { useHistory } from "react-router";
 
 interface Events {
     id: string;
@@ -32,6 +33,7 @@ interface EventCardProps {
 
 const EventCard: React.FC<EventCardProps> = ({ events, userType }) => {
     const [showModal, setShowModal] = useState<string | null>(null);
+    const history = useHistory();
     
 
     const openModal = (id: string) => {
@@ -40,6 +42,18 @@ const EventCard: React.FC<EventCardProps> = ({ events, userType }) => {
 
     const closeModal = () => {
         setShowModal(null);
+    };
+    
+    const handleAdministerGame = () => {
+        // Navega al panel de administración del juego
+        history.push('/bingo/admin');
+        closeModal();
+    };
+
+    const handleJoinGame = () => {
+        // Navega a la página del juego para el usuario
+        history.push('/game-home');
+        closeModal();
     };
     function formatDate(fecha : string) {
         // Crear un objeto Date a partir de la fecha en formato ISO 8601
@@ -97,21 +111,21 @@ const EventCard: React.FC<EventCardProps> = ({ events, userType }) => {
       {events.map((event) => (
         <IonCard key={event.id} className="bg-morado text-blanco shadow-lg rounded-lg mb-4">
           <IonCardHeader className="flex justify-between items-center">
-  <div className="w-full flex justify-end">
-    <h5 className="w-full flex justify-center text-xl font-semibold text-white">
-      {event.name}
-    </h5>
-    <IonButton
-      size="small"
-      shape="round"
-      className="text-white py-2 px-2"
-      onClick={() => openModal(event.id)}
-    >
-      <IonIcon icon={informationCircleOutline} />
-      <p className="text-sm font-semibold text-white capitalize">Detalles</p>
-    </IonButton>
-  </div>
-</IonCardHeader>
+            <div className="w-full flex justify-end">
+                <h5 className="w-full flex justify-center text-xl font-semibold text-white">
+                {event.name}
+                </h5>
+                <IonButton
+                size="small"
+                shape="round"
+                className="text-white py-2 px-2"
+                onClick={() => openModal(event.id)}
+                >
+                <IonIcon icon={informationCircleOutline} />
+                <p className="text-sm font-semibold text-white capitalize">Detalles</p>
+                </IonButton>
+            </div>
+            </IonCardHeader>
           <IonCardContent>
             {(() => {
               const { formattedDate, formattedTime } = formatDate(event.date);
@@ -199,7 +213,7 @@ const EventCard: React.FC<EventCardProps> = ({ events, userType }) => {
                           event.date,
                           event.location,
                           event.event_type,
-                          '4'
+                          '4' // 4 para cancelado
                         )
                       }
                     >

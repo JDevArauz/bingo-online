@@ -1,0 +1,40 @@
+/* src/pages/HomePage.css */
+
+/* Estilo base para nuestras tarjetas interactivas */
+.bingo-card {
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Efecto al pasar el cursor: la tarjeta se agranda y la sombra se pronuncia */
+.bingo-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo para los iconos dentro de las tarjetas */
+.bingo-card ion-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+/* Centrado del contenido de la tarjeta */
+.bingo-card ion-card-header,
+.bingo-card ion-card-content {
+    text-align: center;
+}
+
+/* Estilo específico para la tarjeta de usuario */
+.user-card {
+    --background: linear-gradient(45deg, #2dd4bf, #14b8a6);
+    color: white;
+}
+
+/* Estilo específico para las tarjetas de admin */
+.admin-card {
+    --background: linear-gradient(45deg, #a78bfa, #8b5cf6);
+    color: white;
+}
